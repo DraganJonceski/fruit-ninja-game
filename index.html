@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit Slicer</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-teal-800: rgba(41, 150, 161, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --font-weight-bold: 600;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-base: 8px;
+            --radius-md: 10px;
+            --radius-lg: 12px;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+
+        @font-face {
+            font-family: 'FKGroteskNeue';
+            src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2') format('woff2');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(180deg, #87CEEB 0%, #FFFFFF 100%);
+        }
+
+        #menuScreen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #menuScreen.hidden {
+            display: none;
+        }
+
+        .menu-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 90px;
+        }
+
+        h1 {
+            font-size: 64px;
+            font-weight: var(--font-weight-bold);
+            color: #FF6B6B;
+            text-shadow: 3px 3px 0px #FFD700, 6px 6px 0px #FFA500;
+            margin-bottom: var(--space-16);
+        }
+
+        .high-score {
+            font-size: var(--font-size-2xl);
+            color: var(--color-text);
+            margin-bottom: var(--space-32);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .start-button, .menu-button, .play-again-button {
+            padding: var(--space-20) 60px;
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            background: linear-gradient(135deg, #FF6B6B 0%, #FFA500 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: var(--font-family-base);
+        }
+
+        .start-button:hover, .menu-button:hover, .play-again-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        .start-button:active, .menu-button:active, .play-again-button:active {
+            transform: translateY(0);
+        }
+
+        .banner-ad {
+            width: 728px;
+            max-width: 90%;
+            height: 90px;
+            background: #E0E0E0;
+            border: 2px solid #999;
+            border-radius: var(--radius-base);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: var(--font-size-xl);
+            color: #666;
+            font-weight: var(--font-weight-semibold);
+            position: absolute;
+            bottom: var(--space-16);
+        }
+
+        #gameScreen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        #gameScreen.active {
+            display: block;
+        }
+
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: none;
+        }
+
+        .game-ui {
+            position: absolute;
+            top: var(--space-20);
+            left: var(--space-20);
+            right: var(--space-20);
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .score-display, .lives-display {
+            background: rgba(255, 255, 255, 0.9);
+            padding: var(--space-12) var(--space-24);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text);
+            box-shadow: var(--shadow-md);
+        }
+
+        .lives-display {
+            color: #FF4444;
+        }
+
+        #gameOverScreen {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+        }
+
+        #gameOverScreen.active {
+            display: flex;
+        }
+
+        .game-over-content {
+            background: white;
+            padding: 60px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .game-over-title {
+            font-size: 48px;
+            font-weight: var(--font-weight-bold);
+            color: #FF4444;
+            margin-bottom: var(--space-24);
+        }
+
+        .final-score, .best-score {
+            font-size: var(--font-size-2xl);
+            color: var(--color-text);
+            margin-bottom: var(--space-16);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .game-over-buttons {
+            display: flex;
+            gap: var(--space-16);
+            margin-top: var(--space-32);
+        }
+
+        .menu-button, .play-again-button {
+            padding: var(--space-16) var(--space-32);
+            font-size: var(--font-size-lg);
+        }
+
+        .menu-button {
+            background: linear-gradient(135deg, #6C757D 0%, #495057 100%);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 48px;
+            }
+            
+            .start-button, .menu-button, .play-again-button {
+                padding: var(--space-16) var(--space-32);
+                font-size: var(--font-size-xl);
+            }
+            
+            .game-over-content {
+                padding: var(--space-32);
+            }
+            
+            .game-over-title {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="menuScreen">
+        <div class="menu-content">
+            <h1>🍉 Fruit Slicer 🍎</h1>
+            <div class="high-score">High Score: <span id="menuHighScore">0</span></div>
+            <button class="start-button" id="startButton">START GAME</button>
+        </div>
+        <div class="banner-ad">Banner Ad Space</div>
+    </div>
+
+    <div id="gameScreen">
+        <canvas id="gameCanvas"></canvas>
+        <div class="game-ui">
+            <div class="score-display">Score: <span id="scoreValue">0</span></div>
+            <div class="lives-display">❤️ <span id="livesValue">3</span></div>
+        </div>
+    </div>
+
+    <div id="gameOverScreen">
+        <div class="game-over-content">
+            <div class="game-over-title">GAME OVER</div>
+            <div class="final-score">Score: <span id="finalScore">0</span></div>
+            <div class="best-score">High Score: <span id="bestScore">0</span></div>
+            <div class="game-over-buttons">
+                <button class="play-again-button" id="playAgainButton">PLAY AGAIN</button>
+                <button class="menu-button" id="menuButton">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
